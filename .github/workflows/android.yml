@@ -22,6 +22,9 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
 
+      - name: Generate package.properties
+        run: echo releaseType=CI > package.properties
+
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug --no-daemon
 
