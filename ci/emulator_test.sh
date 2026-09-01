@@ -33,7 +33,19 @@ for i, freq in enumerate([440, 550, 660, 770], 1):
     w.writeframes(bytes(frames)); w.close()
 print("wavs ok")
 PYEOF
-adb shell mkdir -p /sdcard/Music
+
+echo "=== wait sdcard ready (FUSE reconnect after adb root) ==="
+SDCARD_OK=0
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  if adb shell "mkdir -p /sdcard/Music && touch /sdcard/Music/.probe && rm /sdcard/Music/.probe" 2>/dev/null; then
+    SDCARD_OK=1
+    echo "sdcard ready (try $i)"
+    break
+  fi
+  echo "sdcard not ready (try $i)"; sleep 6
+done
+[ "$SDCARD_OK" = "1" ] || { echo "FATAL: sdcard never ready"; exit 1; }
+
 adb push /tmp/t1.wav /sdcard/Music/LiquidDream01.wav
 adb push /tmp/t2.wav /sdcard/Music/LiquidDream02.wav
 adb push /tmp/t3.wav /sdcard/Music/LiquidDream03.wav
