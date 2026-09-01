@@ -68,7 +68,6 @@ jobs:
           api-level: 34
           arch: x86_64
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -no-boot-anim
-          hide_error_dialogs: true
           script: bash ./ci/emulator_test.sh
 
       - uses: actions/upload-artifact@v4

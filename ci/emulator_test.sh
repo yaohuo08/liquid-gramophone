@@ -19,20 +19,29 @@ adb shell pm grant $PKG android.permission.READ_MEDIA_AUDIO 2>/dev/null || true
 adb shell pm grant $PKG android.permission.READ_EXTERNAL_STORAGE 2>/dev/null || true
 adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS 2>/dev/null || true
 
-echo "=== generate audio ==="
-ffmpeg -y -loglevel error -f lavfi -i "sine=frequency=440:duration=240" -acodec libmp3lame -q:a 5 /tmp/t1.mp3
-ffmpeg -y -loglevel error -f lavfi -i "sine=frequency=550:duration=240" -acodec libmp3lame -q:a 5 /tmp/t2.mp3
-ffmpeg -y -loglevel error -f lavfi -i "sine=frequency=660:duration=240" -acodec libmp3lame -q:a 5 /tmp/t3.mp3
-ffmpeg -y -loglevel error -f lavfi -i "sine=frequency=770:duration=240" -acodec libmp3lame -q:a 5 /tmp/t4.mp3
+echo "=== generate audio (python wav, no ffmpeg needed) ==="
+python3 << 'PYEOF'
+import math, struct, wave
+for i, freq in enumerate([440, 550, 660, 770], 1):
+    w = wave.open(f'/tmp/t{i}.wav', 'w')
+    w.setnchannels(1); w.setsampwidth(2); w.setframerate(44100)
+    n = 44100 * 60
+    frames = bytearray()
+    for t in range(n):
+        v = int(20000 * math.sin(2 * math.pi * freq * t / 44100))
+        frames += struct.pack('<h', v)
+    w.writeframes(bytes(frames)); w.close()
+print("wavs ok")
+PYEOF
 adb shell mkdir -p /sdcard/Music
-adb push /tmp/t1.mp3 /sdcard/Music/LiquidDream01.mp3
-adb push /tmp/t2.mp3 /sdcard/Music/LiquidDream02.mp3
-adb push /tmp/t3.mp3 /sdcard/Music/LiquidDream03.mp3
-adb push /tmp/t4.mp3 /sdcard/Music/LiquidDream04.mp3
+adb push /tmp/t1.wav /sdcard/Music/LiquidDream01.wav
+adb push /tmp/t2.wav /sdcard/Music/LiquidDream02.wav
+adb push /tmp/t3.wav /sdcard/Music/LiquidDream03.wav
+adb push /tmp/t4.wav /sdcard/Music/LiquidDream04.wav
 
 echo "=== media scan ==="
 for i in 1 2 3 4; do
-  adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Music/LiquidDream0$i.mp3" || true
+  adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Music/LiquidDream0$i.wav" || true
 done
 sleep 4
 
