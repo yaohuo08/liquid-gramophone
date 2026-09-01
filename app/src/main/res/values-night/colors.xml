@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- iOS Liquid Glass palette (dark) -->
+    <color name="md_theme_primary">#0A84FF</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#004B7C</color>
+    <color name="md_theme_onPrimaryContainer">#B8DCFF</color>
+    <color name="md_theme_secondary">#8AB4D8</color>
+    <color name="md_theme_onSecondary">#0E2439</color>
+    <color name="md_theme_secondaryContainer">#24384C</color>
+    <color name="md_theme_onSecondaryContainer">#D2E4FF</color>
+    <color name="md_theme_tertiary">#4DD5CC</color>
+    <color name="md_theme_onTertiary">#003735</color>
+    <color name="md_theme_tertiaryContainer">#004F4B</color>
+    <color name="md_theme_onTertiaryContainer">#9AE8E2</color>
+    <color name="md_theme_error">#FF453A</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_errorContainer">#5C0B05</color>
+    <color name="md_theme_onErrorContainer">#FFDAD4</color>
+    <color name="md_theme_background">#000000</color>
+    <color name="md_theme_onBackground">#F2F2F7</color>
+    <color name="md_theme_surface">#000000</color>
+    <color name="md_theme_onSurface">#F2F2F7</color>
+    <color name="md_theme_surfaceVariant">#26262A</color>
+    <color name="md_theme_onSurfaceVariant">#A8A8AE</color>
+    <color name="md_theme_outline">#545458</color>
+    <color name="md_theme_outlineVariant">#38383A</color>
+    <color name="md_theme_inverseSurface">#F2F2F7</color>
+    <color name="md_theme_inverseOnSurface">#1C1C1E</color>
+    <color name="md_theme_inversePrimary">#0066CC</color>
+    <color name="md_theme_primaryFixed">#B8DCFF</color>
+    <color name="md_theme_onPrimaryFixed">#002A47</color>
+    <color name="md_theme_primaryFixedDim">#84C2FF</color>
+    <color name="md_theme_onPrimaryFixedVariant">#003B63</color>
+    <color name="md_theme_secondaryFixed">#D2E4FF</color>
+    <color name="md_theme_onSecondaryFixed">#101C2B</color>
+    <color name="md_theme_secondaryFixedDim">#B4C9E4</color>
+    <color name="md_theme_onSecondaryFixedVariant">#24384C</color>
+    <color name="md_theme_tertiaryFixed">#9AE8E2</color>
+    <color name="md_theme_onTertiaryFixed">#00201E</color>
+    <color name="md_theme_tertiaryFixedDim">#7ECBC5</color>
+    <color name="md_theme_onTertiaryFixedVariant">#004F4B</color>
+    <color name="md_theme_surfaceDim">#000000</color>
+    <color name="md_theme_surfaceBright">#2A2A2E</color>
+    <color name="md_theme_surfaceContainerLowest">#0A0A0C</color>
+    <color name="md_theme_surfaceContainerLow">#131315</color>
+    <color name="md_theme_surfaceContainer">#1C1C1E</color>
+    <color name="md_theme_surfaceContainerHigh">#242426</color>
+    <color name="md_theme_surfaceContainerHighest">#2C2C2E</color>
+    <color name="splash_foreground_color">#F2F2F7</color>
+    <!-- Liquid Glass -->
+    <color name="glass_card">#B31C1C1E</color>
+    <color name="glass_stroke">#26FFFFFF</color>
+</resources>
