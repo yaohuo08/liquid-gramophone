@@ -25,6 +25,10 @@ echo "=== install apk ==="
 APK_FILE=$(ls *.apk | head -1)
 echo "installing: $APK_FILE"
 adb install -r -g "$APK_FILE"
+# debug build has applicationIdSuffix ".debug" — detect real package name
+PKG=$(adb shell pm list packages 2>/dev/null | grep -i gramophone | head -1 | sed 's/package://; s/\r//')
+[ -z "$PKG" ] && PKG="org.akanework.gramophone"
+echo "real package: $PKG"
 
 echo "=== grant permissions ==="
 adb shell pm grant $PKG android.permission.READ_MEDIA_AUDIO 2>/dev/null || true
@@ -83,14 +87,14 @@ adb shell cmd uimode night yes
 sleep 2
 
 echo "=== launch (poll until foreground) ==="
-adb shell am start -n $PKG/.ui.MainActivity
+adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 2>/dev/null || adb shell am start -n $PKG/.ui.MainActivity
 APP_UP=0
 for i in $(seq 1 20); do
   FOCUS=$(adb shell dumpsys window | grep -i mCurrentFocus || true)
   echo "focus[$i]: $FOCUS"
-  if echo "$FOCUS" | grep -qi "$PKG"; then APP_UP=1; echo "app foreground (try $i)"; break; fi
+  if echo "$FOCUS" | grep -qi "gramophone"; then APP_UP=1; echo "app foreground (try $i)"; break; fi
   # retry launch every 5 polls in case am start was swallowed
-  if [ $((i % 5)) = "0" ]; then adb shell am start -n $PKG/.ui.MainActivity || true; fi
+  if [ $((i % 5)) = "0" ]; then adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 2>/dev/null || true; fi
   sleep 3
 done
 [ "$APP_UP" = "1" ] || { echo "WARN: app not foreground, continuing anyway"; }
