@@ -86,19 +86,35 @@ echo "=== dark mode ==="
 adb shell cmd uimode night yes
 sleep 2
 
-echo "=== launch (poll until foreground) ==="
-adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 2>/dev/null || adb shell am start -n $PKG/.ui.MainActivity
+echo "=== keep screen awake & dismiss keyguard ==="
+adb shell input keyevent KEYCODE_WAKEUP || true
+adb shell svc power stayon true || true
+adb shell wm dismiss-keyguard || true
+sleep 2
+
+echo "=== launch (explicit full component; .ui relative path breaks under debug suffix) ==="
+# real package detected above (org.akanework.gramophone.debug), but activity class
+# path stays org.akanework.gramophone.ui.MainActivity (manifest package unchanged)
+adb shell am start -n "$PKG/org.akanework.gramophone.ui.MainActivity"
 APP_UP=0
 for i in $(seq 1 20); do
   FOCUS=$(adb shell dumpsys window | grep -i mCurrentFocus || true)
   echo "focus[$i]: $FOCUS"
-  if echo "$FOCUS" | grep -qi "gramophone"; then APP_UP=1; echo "app foreground (try $i)"; break; fi
-  # retry launch every 5 polls in case am start was swallowed
-  if [ $((i % 5)) = "0" ]; then adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 2>/dev/null || true; fi
+  if echo "$FOCUS" | grep -qi "gramophone" && ! echo "$FOCUS" | grep -qi "leakcanary"; then
+    APP_UP=1; echo "app foreground (try $i)"; break
+  fi
+  # if leakcanary hijacked the foreground, explicitly relaunch main activity
+  if [ $((i % 4)) = "0" ]; then
+    adb shell am start -n "$PKG/org.akanework.gramophone.ui.MainActivity" || true
+  fi
   sleep 3
 done
 [ "$APP_UP" = "1" ] || { echo "WARN: app not foreground, continuing anyway"; }
+adb shell wm dismiss-keyguard || true
 sleep 6
+# wake again right before first screencap to avoid black compositor frames
+adb shell input keyevent KEYCODE_WAKEUP || true
+sleep 1
 adb exec-out screencap -p > shots/1_library_dark.png
 
 echo "=== tap first song ==="
