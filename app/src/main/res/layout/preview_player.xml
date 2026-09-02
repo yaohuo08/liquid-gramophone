@@ -15,7 +15,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="?attr/colorSurfaceContainer"
+        android:backgroundTint="@color/glass_frame"
         app:cardCornerRadius="@dimen/list_round_corner_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

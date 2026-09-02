@@ -19,7 +19,7 @@
         android:id="@+id/player_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="?attr/colorSurfaceContainer"
+        android:backgroundTint="@color/sheet_glass"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:elevation="?attr/previewPlayerElevation"

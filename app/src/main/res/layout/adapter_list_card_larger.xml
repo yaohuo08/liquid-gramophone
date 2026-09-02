@@ -32,7 +32,7 @@
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:layout_gravity="center_vertical"
-            android:background="?attr/colorSurfaceContainer"
+            android:background="@color/glass_frame"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/ic_default_cover" />

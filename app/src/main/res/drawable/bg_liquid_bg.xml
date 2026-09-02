@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 真·液态玻璃底色: iOS风浅色渐变+蓝色光晕, 让半透明玻璃卡有内容可透 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="315"
+                android:startColor="#E9F0FA"
+                android:centerColor="#F4F3F1"
+                android:endColor="#EFF3F8" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="900dp"
+                android:centerX="0.15"
+                android:centerY="0.1"
+                android:startColor="#33A7C4FF"
+                android:endColor="#00A7C4FF" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="800dp"
+                android:centerX="0.85"
+                android:centerY="0.9"
+                android:startColor="#26FFD9C0"
+                android:endColor="#00FFD9C0" />
+        </shape>
+    </item>
+</layer-list>

@@ -50,5 +50,7 @@
     <color name="splash_foreground_color">#F2F2F7</color>
     <!-- Liquid Glass -->
     <color name="glass_card">#B31C1C1E</color>
+    <color name="sheet_glass">#F010151F</color>
+    <color name="glass_frame">#2EFFFFFF</color>
     <color name="glass_stroke">#26FFFFFF</color>
 </resources>
