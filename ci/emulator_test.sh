@@ -3,6 +3,30 @@ set -e
 PKG="org.akanework.gramophone"
 mkdir -p shots
 
+# wake screen + screencap with black-frame retry (size heuristic: real UI >20KB)
+snap() {
+  local f="$1" sz try=1
+  adb shell input keyevent KEYCODE_WAKEUP || true
+  sleep 1
+  adb exec-out screencap -p > "$f" || true
+  sz=$(stat -c%s "$f" 2>/dev/null || echo 0)
+  while [ "$sz" -lt 20000 ] && [ $try -le 3 ]; do
+    echo "black-frame suspected ($sz bytes), retry $try"
+    adb shell input keyevent KEYCODE_WAKEUP || true
+    sleep 3
+    adb exec-out screencap -p > "$f" || true
+    sz=$(stat -c%s "$f" 2>/dev/null || echo 0)
+    try=$((try+1))
+  done
+  echo "snap: $f ($sz bytes)"
+}
+
+dump_crash() {
+  adb logcat -b crash -d > shots/crash_buffer.txt 2>&1 || true
+  adb logcat -d -s AndroidRuntime:E > shots/runtime_err.txt 2>&1 || true
+  adb logcat -d > shots/logcat.txt 2>&1 || true
+}
+
 echo "=== wait boot ==="
 adb wait-for-device
 until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; do sleep 2; done
@@ -109,35 +133,42 @@ for i in $(seq 1 20); do
   fi
   sleep 3
 done
-[ "$APP_UP" = "1" ] || { echo "WARN: app not foreground, continuing anyway"; }
+[ "$APP_UP" = "1" ] || {
+  echo "FATAL: app never came to foreground"
+  dump_crash
+  adb exec-out screencap -p > shots/0_fatal_foreground.png || true
+  ls shots/
+  echo "=== crash buffer ==="; tail -50 shots/crash_buffer.txt 2>/dev/null || true
+  echo "=== AndroidRuntime ==="; tail -40 shots/runtime_err.txt 2>/dev/null || true
+  exit 1   # 硬失败：app没起来 = 测试失败，不再放行
+}
 adb shell wm dismiss-keyguard || true
 sleep 6
 # wake again right before first screencap to avoid black compositor frames
-adb shell input keyevent KEYCODE_WAKEUP || true
-sleep 1
-adb exec-out screencap -p > shots/1_library_dark.png
+snap shots/1_library_dark.png
 
 echo "=== tap first song ==="
 adb shell input tap $MID_X $SONG_Y
 sleep 5
 adb shell dumpsys window | grep -i mCurrentFocus || true
-adb exec-out screencap -p > shots/2_minibar_dark.png
+snap shots/2_minibar_dark.png
 
 echo "=== expand full player ==="
 adb shell input tap $MID_X $MINI_Y
 sleep 5
 adb shell dumpsys window | grep -i mCurrentFocus || true
-adb exec-out screencap -p > shots/3_player_dark.png
+snap shots/3_player_dark.png
 adb shell input keyevent 4
 sleep 2
 
 echo "=== light mode ==="
 adb shell cmd uimode night no
 sleep 4
-adb exec-out screencap -p > shots/4_library_light.png
+snap shots/4_library_light.png
 adb shell input tap $MID_X $MINI_Y
 sleep 4
-adb exec-out screencap -p > shots/5_player_light.png
+snap shots/5_player_light.png
 
 echo "=== done ==="
+dump_crash
 ls -la shots/
