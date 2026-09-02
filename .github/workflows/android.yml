@@ -50,7 +50,7 @@ jobs:
   emulator-ui:
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -65,7 +65,7 @@ jobs:
       - name: Boot emulator, install, launch, tap, screenshot
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 29
           arch: x86_64
           profile: pixel_6
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -no-boot-anim
